@@ -1,41 +1,41 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {map} from 'rxjs/operators';
-import {Token} from "../models/token";
-
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { map } from 'rxjs/operators';
+import { Token } from '../models/token';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private url = 'https://kamilpinas-l11-tai.herokuapp.com';
 
-  private url = 'https://tai21-test.herokuapp.com/api';
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   authenticate(credentials: any) {
-    return this.http.post(this.url + '/user/auth', {
-      login: credentials.login,
-      password: credentials.password
-    }).pipe(
-      map((result: Token | any) => {
-        if (result && result.token) {
-          localStorage.setItem('token', result.token);
-          return true;
-        }
-        return false;
+    return this.http
+      .post(this.url + '/api/user/auth', {
+        login: credentials.login,
+        password: credentials.password,
       })
-    );
+      .pipe(
+        map((result: Token | any) => {
+          if (result && result.token) {
+            localStorage.setItem('token', result.token);
+            return true;
+          }
+          return false;
+        })
+      );
   }
 
   createOrUpdate(credentials: any) {
-    return this.http.post(this.url + '/user/create', credentials);
+    return this.http.post(this.url + '/api/user/create', credentials);
   }
 
   logout() {
-    return this.http.delete(this.url + '/user/logout/' + this.currentUser.userId)
+    return this.http
+      .delete(this.url + '/api/user/logout/' + this.currentUser.userId)
       .pipe(
         map(() => {
           localStorage.removeItem('token');
@@ -49,7 +49,7 @@ export class AuthService {
     if (!token) {
       return false;
     }
-    return !(jwtHelper.isTokenExpired(token));
+    return !jwtHelper.isTokenExpired(token);
   }
 
   get currentUser() {

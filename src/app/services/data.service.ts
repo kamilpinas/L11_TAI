@@ -1,15 +1,13 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
+  private url = 'https://kamilpinas-l11-tai.herokuapp.com';
 
-  private url = 'https://tai21-test.herokuapp.com/';
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   getAll() {
     return this.http.get(this.url + '/api/posts/');
@@ -26,6 +24,4 @@ export class DataService {
   createOrUpdate(post: any) {
     return this.http.post(`${this.url}/api/posts`, post);
   }
-
-
 }
